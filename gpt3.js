@@ -1,45 +1,23 @@
-// const OpenAI = require("openai")
-const dotenv = require("dotenv")
-dotenv.config()
-// //api key config
-// const apiKey = process.env.OPENAI_API_KEY; 
-// const openai = new OpenAI({ apiKey });
+import express from 'express'
+import openai from './config/openai.js'
+import readlineSync from 'readline-sync'
+import colors from 'colors'
+const app = express()
+const port = 3000
 
-// const getCompletion = async (prompt) => { 
-//   try{
-//     const response = await openai.chat.completions.create({
-//       model: "gpt-3.5-turbo-0613",
-//       prompt: prompt,
-//       max_tokens: 200
-//     })
+app.use(express.json())
+app.listen(port, () => console.log("Server running on port: " + port))
 
-//     return response.choices[0].text.trim();
-//   }catch(error){
-//     console.log("Something went wrong", error)
-//     throw error; 
-//   }
-// } 
-
-
-// const text = "Háblame de fútbol"
-
-// const prompt = `${text}`
-
-// getCompletion(prompt)
-// .then((res) => console.log(res))
-// .catch((error) => console.log(error))
-
-const OpenAI = require("openai")
-const apiKey = process.env.OPENAI_API_KEY; 
-const openai = new OpenAI({ apiKey });
-
-async function main() {
-  const completion = await openai.chat.completions.create({
-    messages: [{ role: "system", content: "You are a helpful assistant." }],
-    model: "gpt-3.5-turbo",
+const main = async (prompt) => {
+  const completion = await openai.completions.create({
+    model: "text-davinci-003",
+    prompt: prompt,
+    max_tokens: 30,
   });
-
-  console.log(completion.choices[0]);
+  console.log(completion.choices[0].text);
 }
 
-main();
+const text = 'Háblame de fútbol';
+const prompt = `${text}`;
+
+main(prompt)
